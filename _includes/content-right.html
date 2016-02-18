@@ -1,0 +1,31 @@
+<div class="content-right">
+	<div class="content-right-person">
+		<div class="person-head">
+			<img src="{{site.baseurl}}/img/head.jpg" class="img-circle">
+		</div>
+		<div>
+			华中科技大学<br>
+			电子信息与通信学院<br>
+			2012级本科生<br>
+			钟远维
+		</div>
+	</div>
+	<div class="content-right-list list0">
+		<div>
+			标题列表
+		</div>
+		<ul id="tList">
+			{% for post in site.posts limit:6 %}
+			<li><a href="{{ site.baseurl }}{{ post.url }}">{{post.title}}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="content-right-list list1">
+		<div>
+			时间列表
+		</div>
+		<ul id="dList">
+			<li><a href="{{ site.baseurl }}">主人还没有更新列表...</a></li>
+		</ul>
+	</div>
+</div>

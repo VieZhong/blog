@@ -1,0 +1,114 @@
+---
+layout: post
+title: 利用node.js爬虫自动更改shawdowsocks配置
+author: 小夫
+summary: 需要谷歌学术搜索写论文了？需要登录国外网站做外贸?需要上YouTube看视频？需要Gmail收发邮件?但是不会翻墙怎么办？翻墙代理服务器密码要经常手动更改怎么办？
+---
+<style>
+	.imgContent{
+		width: 90%;
+	}
+</style>
+
+<div class="post-content">
+	<div class="post-content-block-1">
+		<div class="post-content-title-2">不会翻墙怎么办</div>
+		
+		<div class="post-content-block-2">
+			<div class="post-content-body-default">
+				网上有很多关于翻墙的软件和网站，大家不妨都去试试。<br>
+				小夫试过几款翻墙应用后，还是觉得SHADOWSOCKS最好用。原因很简单:<br>
+				第一：免费；<br>第二：使用超级简单；<br>第三：网速也不错。<br><br>
+				SHADOWSOCKS官网：http://www.ishadowsocks.com/<br>
+				想要使用SHADOWSOCKS翻墙的同学可以进去瞧瞧，教程相当简单易懂。<br><br>
+				但是SHADOWSOCKS有一个令小夫非常不爽缺点就是：它每6小时更换一次服务器密码。因此每次启动ishadowsocks的时候，都需要到它官网上获取密码。那怎么办呢？小夫知道有一个办法，因为服务器的密码是直接公布在官网上的，因此可以用爬虫的方法抓取网站上的密码，然后修改ishadowsocks的配置文件即可。<br>
+				小夫不才，这几天正好在学习node.js，因此就用node.js来实现爬虫了。<br><br>
+			</div>
+		</div>
+		<div class="post-content-block-2 post-content-vmargin-2">	
+			<div class="post-content-title-2">用node.js来实现爬虫</div>
+			<div class="post-content-body-default">
+				其实过程相当简单，简单来说就是：使用node.js来模拟客户端，使用http的get方法去请求"http://www.ishadowsocks.com/"的地址，然后把返回的信息进行解析，就可以获得服务器地址、端口以及密码和加密方式等信息。最后，只需要把这些信息按配置文件的格式地封装成json字符串即可。<br><br>
+				node.js的源码如下：<br>
+				<pre>
+var http = require('http');
+var fs = require('fs');
+
+var req = http.get("http://www.ishadowsocks.com/", function(res) {　
+  var doc = null;
+  res.on('data', function(chunk) {
+    doc += chunk;
+  });
+  res.on('end', function() {
+
+    var index = doc.indexOf("A服务器地址:");
+    var server = doc.substring(index + 7, index + 17).toUpperCase();
+
+    index = doc.indexOf("端口:");
+    var port = doc.substring(index + 3, index + 7).match(/\d+/g);
+
+    index = doc.indexOf("A密码:");
+    var password = doc.substring(index + 4, index + 12);
+
+    var text = '{"configs" : '
+					+'[{"server" : "' + server + '",'
+					+'"server_port" : ' + port + ','
+					+'"password" : "' + password + '",'
+					+'"method" : "aes-256-cfb",'
+					+'"remarks" : ""}],'
+    			+'"strategy" : null,'
+    			+'"index" : 0,'
+    			+'"global" : false,'
+    			+'"enabled" : true,'
+    			+'"shareOverLan" : false,'
+    			+'"isDefault" : false,'
+    			+'"localPort" : 1080,'
+    			+'"pacUrl" : null,'
+    			+'"useOnlinePac" : false,'
+    			+'"availabilityStatistics" : false'
+    			+'}';
+
+    fs.writeFile('gui-config.json', text, function(err) {
+      if (err) {
+        console.log("writeFile wrong!");
+      } else {
+        console.log("config success!");
+      }
+    });
+  });
+
+}).on('error', function(e) {　　
+  console.log("Got error: " + e.message);
+});
+				</pre>
+				<br><br>
+				最后，把该文件命名为proxy.js，并把它放置在和ishadowsocks.exe相同目录下即可。<br>
+				每次启动的时候，先到该目录下敲一次命令行"node proxy.js"即可（前提是你的系统上已经配置好node.js环境）。<br><br>
+				如图所示：<br>
+				<img src="{{site.baseurl}}/img/2016-01-13/proxy-succ.png" class="imgContent"><br><br>
+			</div>
+		</div>
+				<div class="post-content-block-2 post-content-vmargin-2">	
+			<div class="post-content-title-2">用脚本简化操作</div>
+			<div class="post-content-body-default">
+				虽然上述方法跟手动输入密码比起来，已经很方便了。但每次打开ishadowsocks.exe之前，要手动用命令行去node proxy.js也是比较麻烦的。<br>
+				于是，我们可以考虑用脚本来实现一键操作。<br><br>
+				写一个ss.bat的脚本，然后只要双击ss.bat就可以一键翻墙了。<br>
+				ss.bat的源码如下：<br>
+				<pre>
+@echo off
+node E:\SHADOWSOCKS\proxy.js
+start E:\SHADOWSOCKS\Shadowsocks.exe
+echo shadowsocks started...
+pause
+				</pre>
+				<br><br>
+				如果你还觉得ss.bat的图标很丑，不想看到它~~<br>
+				你也可以把它放进系统盘windows目录下的system32的文件夹里，这样就可以通过“运行”窗口打开了：<br>
+				如图所示：<br>
+				<img src="{{site.baseurl}}/img/2016-01-13/yunxing.png"><br><br>
+			</div>
+		</div>
+	</div>
+</div>
+

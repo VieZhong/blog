@@ -1,0 +1,44 @@
+---
+layout: default
+---
+<body>
+	{% include banner.html %}
+	<div class="content">
+		<div class="container-fluid clearspace">
+			<div class="row display-center contents-bg">
+				<div class="content-left">	
+					<div class="content-left-grid0">
+						<div class="content-left-grid0-head">
+							<span class="headfont0">最新博客：</span>
+							<span class="headfont1">{{ site.posts[0].date | date_to_string }},Post by:{{ site.posts[0].author }}</span>
+						</div>
+						<div class="content-left-grid0-info">
+							<div class="infofont0"><a href="{{ site.baseurl }}{{ site.posts[0].url }}">{{ site.posts[0].title }}</a></div>
+							<div class="infofont1">
+								{{ site.posts[0].summary }}
+							</div>
+							<div class="content-left-grid-pic">
+								<img src="img/{{site.posts[0].date | date: '%F' }}/{{site.posts[0].date | date: '%F' }}.png">
+							</div>
+						</div>
+					</div>	
+					{% for post in site.posts offset:1 %}
+					<div class="content-left-grid">
+						<div class="infofont0"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></div>
+						<div class="infofont2">{{ post.date | date_to_string }},Post by:{{ post.author }}</div>
+						<div class="infofont1">
+							{{ post.summary }}	
+						</div>
+						<div class="content-left-grid-pic">
+							<img src="img/{{post.date | date: '%F' }}/{{post.date | date: '%F' }}.png">
+						</div>
+					</div>	
+					{% endfor %}
+				</div>
+				{% include content-right.html %}
+			</div>
+		</div>
+	</div>
+	{% include foot.html %}
+	<a href="#to-top" id="toTop"> <span id="toTopHover"> </span></a>
+</body>

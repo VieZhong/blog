@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:wb="http://open.weibo.com/wb">
+<head>
+	<meta chatset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/css/blogstyle.css">
+	<title>旧日憾事-前路漫漫</title>
+</head>
+
+{{ content }}
+
+<script type="text/javascript" src="{{ site.baseurl }}/js/jquery.min.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/js/move-top.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/js/easing.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$().UItoTop({ easingType: 'easeOutQuart' });
+	});
+</script>
+
+<script type="text/javascript">
+	function updateTitleList(dateString){
+		$("#tList").html("");
+		{% for post in site.posts %}
+			if ("{{ post.date | date: '%Y年%m月' }}" == dateString){
+				$("#tList").append("<li><a href='{{ site.baseurl }}{{ post.url }}'>{{post.title}}</a></li>");
+			}
+		{% endfor %}
+	}
+
+	function updateDateList(postDate){
+		var date = postDate;
+		var dateArrlen = dateArr.length;
+		var flag = true;
+		while(dateArrlen>0){
+			dateArrlen--;
+			if(dateArr[dateArrlen] == date){
+				flag = false;
+				break;
+			}
+		}
+		if( flag )
+			dateArr.push(date);	
+	}
+
+	var dateArr = [];
+	{% for post in site.posts %}
+		updateDateList("{{ post.date | date: '%Y年%m月' }}");
+	{% endfor %}
+	
+	if(dateArr.length>0){
+		for(var i=0;i<dateArr.length;i++){
+			if(i==0){
+				$("#dList li a:eq(0)").attr("href","javascript:updateTitleList(\'"+dateArr[i]+"\')");
+				$("#dList li a:eq(0)").html(dateArr[i]);
+			}else{
+				$("#dList").append("<li><a href=\"javascript:updateTitleList(\'"+dateArr[i]+"\')\">"+dateArr[i]+"</a></li>");
+			}
+		}
+	}
+	
+</script>
+
+</html>

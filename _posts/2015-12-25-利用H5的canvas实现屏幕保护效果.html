@@ -1,0 +1,52 @@
+---
+layout: post
+title: 利用H5的canvas实现屏幕保护效果
+author: 小夫
+summary: 这是我在学习H5的canvas的时候，尝试用canvas做的一个小demo。不得不承认的是，Canvas实在是太强大了。在以后的学习中，canvas的妙用肯定更多。
+---
+
+<style type="text/css">
+	#screenCanvas{
+		background: url("{{site.baseurl}}/img/2015-12-25/bg.jpg");
+		margin: 10px auto;
+		border: 1px solid #07801B;
+	}
+	
+	#control{
+		margin: 0 40px;
+		border-radius: 4px;
+		width:90px;
+		height: 50px;
+		font-size: 24px;
+		color: #ABE855;
+		text-align: center;
+		background-color: #939A9A;
+	}
+	.post-content a:hover{
+		text-decoration: none;
+	}
+</style>
+
+<div class="post-content">
+	<div class="post-content-block-1">
+		<div class="post-content-title-2">先来看看效果：</div>
+		
+		<div class="post-content-block-2">
+			<div class="post-content-body-default">
+				<canvas id="screenCanvas"></canvas>
+				<div><button id="control" onclick="controlScreen();">Pause</button></div>			
+			</div>
+		</div>
+		<div class="post-content-block-2 post-content-vmargin-2">	
+			<div class="post-content-title-2">源码下载：</div>
+			<div class="post-content-body-default">
+				<a href="{{site.baseurl}}/demo/2015-12-25.zip">点击此处可下载demo实例</a>
+				<br><br><br>
+			</div>
+			
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript" src="{{site.baseurl}}/js/2015-12-25/2015-12-25.js"></script>
+

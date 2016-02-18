@@ -1,0 +1,35 @@
+---
+layout: default
+---
+<style type="text/css">
+@media (max-width: 990px){
+	.banner{
+		display: none;
+	}
+}
+</style>
+<body>
+	{% include banner.html %}
+	<div class="content">
+		<div class="container-fluid clearspace">
+			<div class="row display-center contents-bg">
+				<div class="content-left">	
+					<div class="content-left-grid0">
+						<div class="content-left-grid0-head">
+							<span class="headfont0">当前博客：</span>
+							<span class="headfont1">{{ page.date | date_to_string }},Post by:{{ page.author }}</span>
+						</div>
+						<div class="content-left-grid0-info">
+							<div class="infofont0">{{ page.title }}</div>
+							{{ content }}
+						</div>
+					</div>	
+				</div>
+				{% include content-right.html %}
+			</div>
+		</div>
+	</div>
+	{% include foot.html %}
+</body>
+
+
