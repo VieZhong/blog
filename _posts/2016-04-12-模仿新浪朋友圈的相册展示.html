@@ -1,0 +1,133 @@
+---
+layout: post
+title: 利用移动端HTML的touch事件实现相册展示、图片滑动查看
+author: 小夫
+summary: 该篇文章，提供了一个制作相册的例子，可以在移动端浏览器中使用。效果跟新浪微博和微信朋友圈查看图片一样，点击图片全屏查看，左右滑动可查看前一张或后一张图片，同时可支持查看长图片。滑动主要利用了touchstart、touchmove、touchend事件实现的。
+---
+<div class="post-content">
+	<div class="post-content-block-1">
+		<div class="post-content-title-1">display的多种方式</div>
+		<div class="post-content-block-2">	
+			<div class="post-content-title-2">display:block</div>
+			<div class="post-content-body-default">
+			1. block元素会独占一行，多个block元素会各自新起一行。默认情况下，block元素宽度自动填满其父元素宽度。<br>
+			2. block元素可以设置width,height属性。块级元素即使设置了宽度,仍然是独占一行。<br>
+			3. block元素可以设置margin和padding属性。
+			</div>
+
+			<div class="post-content-title-2 post-content-vmargin-2">display:inline</div>
+			<div class="post-content-body-default">
+			1. inline元素不会独占一行，多个相邻的行内元素会排列在同一行里，直到一行排列不下，才会新换一行，其宽度随元素的内容而变化。<br>
+			2. inline元素设置width,height属性无效。<br>
+			3. inline元素的margin和padding属性，水平方向的padding-left, padding-right, margin-left, margin-right都产生边距效果；但竖直方向的padding-top, padding-bottom, margin-top, margin-bottom不会产生边距效果。
+			</div>
+
+			<div class="post-content-title-2 post-content-vmargin-2">display:inline-block</div>
+			<div class="post-content-body-default">
+			1. 简单来说就是将对象呈现为inline对象，但是对象的内容作为block对象呈现。之后的内联对象会被排列在同一行内。比如我们可以给一个link（a元素）inline-block属性值，使其既具有block的宽度高度特性又具有inline的同行特性。
+			</div>
+		</div>
+	</div>
+
+	<div class="post-content-block-1 post-content-vmargin-1">
+		<div class="post-content-title-1">inline-block的对齐方式</div>
+		<div class="post-content-body-default">
+			模型如下：<br>
+			<pre>
+&lt;style type="text/css"&gt;
+    .outerdiv{
+        width: 280px;
+        background-color: #F00;
+    }
+    .innerdiv1{
+        display: inline-block;
+        background-color: #0F0;
+        width: 120px;
+        height: 100px;
+        vertical-align: inherit;
+    }
+    .innerdiv2{
+        display: inline-block;
+        background-color: #00F;
+        width: 120px;
+        height: 180px;
+        vertical-align: inherit;
+    }
+&lt;/style&gt;			
+&lt;div class="outerdiv"&gt;
+    &lt;div class="innerdiv1"&gt;A&lt;/div&gt;
+    &lt;div class="innerdiv2"&gt;B&lt;/div&gt;
+&lt;/div&gt;
+			</pre>
+		</div>
+		<div class="post-content-block-2">	
+			<div class="post-content-title-2">vertical-align:middle</div>
+			<div class="post-content-body-default">
+				两元素的中间对齐：<br>
+				&nbsp;设置类.innerdiv1和类.innerdiv2的style属性vertical-align为middle，<br>
+				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<img src="{{site.baseurl}}/img/2015-12-17/vertical-middle.png">
+			</div>
+
+			<div class="post-content-title-2 post-content-vmargin-2">vertical-align:top</div>
+			<div class="post-content-body-default">
+				两元素的顶部对齐：<br>
+				&nbsp;设置类.innerdiv1和类.innerdiv2的style属性vertical-align为top，<br>
+				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<img src="{{site.baseurl}}/img/2015-12-17/vertical-top.png">
+			</div>
+
+			<div class="post-content-title-2 post-content-vmargin-2">vertical-align:bottom</div>
+			<div class="post-content-body-default">
+				两元素的底部对齐：<br>
+				&nbsp;设置类.innerdiv1和类.innerdiv2的style属性vertical-align为bottom，<br>
+				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<img src="{{site.baseurl}}/img/2015-12-17/vertical-bottom.png">
+			</div>
+		</div>
+	</div>
+
+	<div class="post-content-block-1 post-content-vmargin-1">
+		<div class="post-content-title-1">inline-block的间距设置为0</div>
+		
+		<div class="post-content-block-2">	
+			<div class="post-content-title-2">1.父容器的padding设置成0</div>
+			<div class="post-content-body-default">
+				<pre>
+.outerdiv{
+    padding:0;
+}
+				</pre>
+			</div>
+
+			<div class="post-content-title-2 post-content-vmargin-2">2.子容器的margin设置成0</div>
+			<div class="post-content-body-default">
+				<pre>
+.innerdiv1,innerdiv2{
+    display: inline-block;
+    vertical-align: top;
+    margin: 0
+}
+				</pre>
+			</div>
+
+			<div class="post-content-title-2 post-content-vmargin-2">3.最关键的一步：设置父容器的font-size为0</div>
+			<div class="post-content-body-default">
+				这一步尤为关键，若父容器的font-size不为0，则子容器之间的间距也不等于0.
+				<pre>
+.outerdiv{
+    font-size:0;
+}
+.innerdiv1,innerdiv2{
+    font-size:14px;
+}
+				</pre>
+				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<img src="{{site.baseurl}}/img/2015-12-17/clear-distance.png">			
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
