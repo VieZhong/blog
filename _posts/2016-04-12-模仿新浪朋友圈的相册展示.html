@@ -6,7 +6,73 @@ summary: 该篇文章，提供了一个制作相册的例子，可以在移动�
 ---
 <div class="post-content">
 	<div class="post-content-block-1">
-		<div class="post-content-title-1">display的多种方式</div>
+		<div class="post-content-block-2">
+			<div class="post-content-body-default">
+				话不多说，先看HTML代码架构。<br>
+				<pre>
+&lt;div class="layer bottomLayer"&gt;
+    &lt;div class="sImgContainer"&gt;
+        &lt;div&gt;&lt;img src="images/try0.jpg"&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;img src="images/try1.jpg"&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;img src="images/try2.jpg"&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;img src="images/try3.jpg"&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;img src="images/try4.jpg"&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;img src="images/try5.jpg"&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;img src="images/try6.jpg"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="layer transparentLayer"&gt;&lt;/div&gt;
+&lt;div class="layer overLayer"&gt;
+    &lt;div id="lImgContainer"&gt;&lt;/div&gt;
+&lt;/div&gt;
+				</pre><br>
+				样式为：<br>
+				<pre>
+.layer{
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.bottomLayer{
+    background: #CEC;
+}
+
+.transparentLayer{
+    background: opacity: 0;
+    display: none;
+}
+
+.overLayer{
+    background: #000;
+    overflow: hidden;
+    display: none;
+}
+
+.sImgContainer{
+    margin-top: 180px;
+}
+
+.sImgContainer div{
+    display: inline-block;
+    margin-left: 10px;
+    margin-bottom: 14px;
+    width: 100px;
+    max-height: 140px;
+    overflow: hidden;
+}
+
+.sImgContainer img{           
+    width: 100%;
+}
+				</pre>
+				可以看到，我先把页面分成三层，每一层都把positon成fixed，使layer脱离文档流，实现逐层覆盖。第一层是底层，用于展示图片缩略图。第二层为透明层，该层作用后面会提到。第三层是大图片展示层，背景为黑色。<br><br>
+				我们先看第一层，即底层。底层通过sImgContainer放置图片，但为了解决长图片缩略图不超出div块的范围，必须设置overflow为hidden，即超出部分的内容不展示。<br>
+				接着，是第二层，我把它的背景设置为透明，主要是为了让用户不感到它的存在。但它的存在必不可少，这是因为，如果没有该层，点击查看底层图片之后，在点击屏幕隐藏大图片时，大图片层消失后手指还在屏幕上少许抖动以致再次触发底层图片的click事件。现在加上透明层，可以隔绝两者，防止手指抖动误点。我们只需要让该透明层在大图片层隐藏后的一段时间后再隐藏，比如300ms，这样即使用户点击大图片消失时，防止手指抖动触发底层图片了。<br><br>
+				现在，重点来了。
+			</div>
+		</div>
+		<div class="post-content-title-1">重点是第三层——查看大图片</div>
 		<div class="post-content-block-2">	
 			<div class="post-content-title-2">display:block</div>
 			<div class="post-content-body-default">
