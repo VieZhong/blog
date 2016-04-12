@@ -2,8 +2,13 @@
 layout: post
 title: 利用移动端HTML的touch事件实现相册展示、图片滑动查看
 author: 小夫
-summary: 该篇文章，提供了一个制作相册的例子，可以在移动端浏览器中使用。效果跟新浪微博和微信朋友圈查看图片一样，点击图片全屏查看，左右滑动可查看前一张或后一张图片，同时可支持查看长图片。滑动主要利用了touchstart、touchmove、touchend事件实现的。
+summary: 该篇文章，提供了一个制作相册的例子，可以在移动端浏览器中使用。效果跟新浪微博和微信朋友圈查看图片一样，点击图片全屏查看，左右滑动可查看前一张或后一张图片，同时可支持查看长图片。滑动主要利用了touchstart、touchmove、touchend事件实现的。文章最后提供demo下载。
 ---
+<style type="text/css">
+	.post-content a:hover{
+		text-decoration: none;
+	}
+</style>
 <div class="post-content">
 	<div class="post-content-block-1">
 		<div class="post-content-block-2">
@@ -12,13 +17,11 @@ summary: 该篇文章，提供了一个制作相册的例子，可以在移动�
 				<pre>
 &lt;div class="layer bottomLayer"&gt;
     &lt;div class="sImgContainer"&gt;
-        &lt;div&gt;&lt;img src="images/try0.jpg"&gt;&lt;/div&gt;
-        &lt;div&gt;&lt;img src="images/try1.jpg"&gt;&lt;/div&gt;
-        &lt;div&gt;&lt;img src="images/try2.jpg"&gt;&lt;/div&gt;
-        &lt;div&gt;&lt;img src="images/try3.jpg"&gt;&lt;/div&gt;
-        &lt;div&gt;&lt;img src="images/try4.jpg"&gt;&lt;/div&gt;
-        &lt;div&gt;&lt;img src="images/try5.jpg"&gt;&lt;/div&gt;
-        &lt;div&gt;&lt;img src="images/try6.jpg"&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;img src=""&gt;&lt;/div&gt;
+        ...
+        ...
+        ...
+        &lt;div&gt;&lt;img src=""&gt;&lt;/div&gt;
     &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="layer transparentLayer"&gt;&lt;/div&gt;
@@ -33,26 +36,21 @@ summary: 该篇文章，提供了一个制作相册的例子，可以在移动�
     top: 0;
     left: 0;
 }
-
 .bottomLayer{
     background: #CEC;
 }
-
 .transparentLayer{
     background: opacity: 0;
     display: none;
 }
-
 .overLayer{
     background: #000;
     overflow: hidden;
     display: none;
 }
-
 .sImgContainer{
     margin-top: 180px;
 }
-
 .sImgContainer div{
     display: inline-block;
     margin-left: 10px;
@@ -61,139 +59,154 @@ summary: 该篇文章，提供了一个制作相册的例子，可以在移动�
     max-height: 140px;
     overflow: hidden;
 }
-
 .sImgContainer img{           
     width: 100%;
 }
 				</pre>
 				可以看到，我先把页面分成三层，每一层都把positon成fixed，使layer脱离文档流，实现逐层覆盖。第一层是底层，用于展示图片缩略图。第二层为透明层，该层作用后面会提到。第三层是大图片展示层，背景为黑色。<br><br>
 				我们先看第一层，即底层。底层通过sImgContainer放置图片，但为了解决长图片缩略图不超出div块的范围，必须设置overflow为hidden，即超出部分的内容不展示。<br>
-				接着，是第二层，我把它的背景设置为透明，主要是为了让用户不感到它的存在。但它的存在必不可少，这是因为，如果没有该层，点击查看底层图片之后，在点击屏幕隐藏大图片时，大图片层消失后手指还在屏幕上少许抖动以致再次触发底层图片的click事件。现在加上透明层，可以隔绝两者，防止手指抖动误点。我们只需要让该透明层在大图片层隐藏后的一段时间后再隐藏，比如300ms，这样即使用户点击大图片消失时，防止手指抖动触发底层图片了。<br><br>
+				接着，是第二层，我把它的背景设置为透明，主要是为了让用户不感到它的存在。但它的存在必不可少，这是因为，如果没有该层，点击查看底层图片之后，在点击屏幕隐藏大图片时，大图片层消失后手指还在屏幕上少许抖动以致再次触发底层图片的click事件。现在加上透明层，可以隔绝两者，防止手指抖动误点。我们只需要让该透明层在大图片层隐藏后的一段时间后再隐藏，比如300ms，这样即使用户点击大图片消失时，防止手指抖动触发底层图片了。<br>
 				现在，重点来了。
 			</div>
 		</div>
-		<div class="post-content-title-1">重点是第三层——查看大图片</div>
+		<div class="post-content-title-1 post-content-vmargin-1">重点是第三层——查看大图片</div>
 		<div class="post-content-block-2">	
-			<div class="post-content-title-2">display:block</div>
+			<div class="post-content-title-2">1.首先，写完成HTML的结构,并添加css</div>
 			<div class="post-content-body-default">
-			1. block元素会独占一行，多个block元素会各自新起一行。默认情况下，block元素宽度自动填满其父元素宽度。<br>
-			2. block元素可以设置width,height属性。块级元素即使设置了宽度,仍然是独占一行。<br>
-			3. block元素可以设置margin和padding属性。
-			</div>
-
-			<div class="post-content-title-2 post-content-vmargin-2">display:inline</div>
-			<div class="post-content-body-default">
-			1. inline元素不会独占一行，多个相邻的行内元素会排列在同一行里，直到一行排列不下，才会新换一行，其宽度随元素的内容而变化。<br>
-			2. inline元素设置width,height属性无效。<br>
-			3. inline元素的margin和padding属性，水平方向的padding-left, padding-right, margin-left, margin-right都产生边距效果；但竖直方向的padding-top, padding-bottom, margin-top, margin-bottom不会产生边距效果。
-			</div>
-
-			<div class="post-content-title-2 post-content-vmargin-2">display:inline-block</div>
-			<div class="post-content-body-default">
-			1. 简单来说就是将对象呈现为inline对象，但是对象的内容作为block对象呈现。之后的内联对象会被排列在同一行内。比如我们可以给一个link（a元素）inline-block属性值，使其既具有block的宽度高度特性又具有inline的同行特性。
-			</div>
-		</div>
-	</div>
-
-	<div class="post-content-block-1 post-content-vmargin-1">
-		<div class="post-content-title-1">inline-block的对齐方式</div>
-		<div class="post-content-body-default">
-			模型如下：<br>
-			<pre>
-&lt;style type="text/css"&gt;
-    .outerdiv{
-        width: 280px;
-        background-color: #F00;
-    }
-    .innerdiv1{
-        display: inline-block;
-        background-color: #0F0;
-        width: 120px;
-        height: 100px;
-        vertical-align: inherit;
-    }
-    .innerdiv2{
-        display: inline-block;
-        background-color: #00F;
-        width: 120px;
-        height: 180px;
-        vertical-align: inherit;
-    }
-&lt;/style&gt;			
-&lt;div class="outerdiv"&gt;
-    &lt;div class="innerdiv1"&gt;A&lt;/div&gt;
-    &lt;div class="innerdiv2"&gt;B&lt;/div&gt;
+				<pre>
+&lt;div class="layer overLayer"&gt;
+    &lt;div id="lImgContainer"&gt;
+    	&lt;div class="lImgContainer-single"&gt;&lt;div&gt;&lt;img src=""&gt;&lt;/div&gt;&lt;/div&gt;
+			...
+			...
+    	&lt;div class="lImgContainer-single"&gt;&lt;div&gt;&lt;img src=""&gt;&lt;/div&gt;&lt;/div&gt;
+    &lt;/div&gt;
 &lt;/div&gt;
 			</pre>
-		</div>
-		<div class="post-content-block-2">	
-			<div class="post-content-title-2">vertical-align:middle</div>
-			<div class="post-content-body-default">
-				两元素的中间对齐：<br>
-				&nbsp;设置类.innerdiv1和类.innerdiv2的style属性vertical-align为middle，<br>
-				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<img src="{{site.baseurl}}/img/2015-12-17/vertical-middle.png">
-			</div>
-
-			<div class="post-content-title-2 post-content-vmargin-2">vertical-align:top</div>
-			<div class="post-content-body-default">
-				两元素的顶部对齐：<br>
-				&nbsp;设置类.innerdiv1和类.innerdiv2的style属性vertical-align为top，<br>
-				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<img src="{{site.baseurl}}/img/2015-12-17/vertical-top.png">
-			</div>
-
-			<div class="post-content-title-2 post-content-vmargin-2">vertical-align:bottom</div>
-			<div class="post-content-body-default">
-				两元素的底部对齐：<br>
-				&nbsp;设置类.innerdiv1和类.innerdiv2的style属性vertical-align为bottom，<br>
-				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<img src="{{site.baseurl}}/img/2015-12-17/vertical-bottom.png">
-			</div>
-		</div>
-	</div>
-
-	<div class="post-content-block-1 post-content-vmargin-1">
-		<div class="post-content-title-1">inline-block的间距设置为0</div>
-		
-		<div class="post-content-block-2">	
-			<div class="post-content-title-2">1.父容器的padding设置成0</div>
-			<div class="post-content-body-default">
-				<pre>
-.outerdiv{
-    padding:0;
+			<pre>
+#lImgContainer{
+    overflow: hidden;
+    position: relative;
 }
-				</pre>
-			</div>
-
-			<div class="post-content-title-2 post-content-vmargin-2">2.子容器的margin设置成0</div>
-			<div class="post-content-body-default">
-				<pre>
-.innerdiv1,innerdiv2{
+.lImgContainer-single{
     display: inline-block;
-    vertical-align: top;
-    margin: 0
+    overflow: auto;
+}
+.lImgContainer-single div{
+    display: table-cell;
+    vertical-align: middle;
+}
+.lImgContainer-single img{           
+    width: 100%;
 }
 				</pre>
+				首先，我们设置overLayer层背景为黑色，然后类为lImgContainer的元素是所有大图片的容器，总宽度为屏幕宽度的图片总数倍，则每个图片宽为屏幕的宽度，横向排列，因此，必须设置overflow为hidden,保证隐藏滑动条以及每次只显示一张图片。<br>
+				然后，把每张图片的容器lImgContainer-single的display设置成inline-block,使图片横向顺序排列，再设置overfloat为auto，可以使长图片上下滑动查看。<br>
+				跟着，把lImgContainer-single里面的div元素display方式设置成table-cell，verti-align设置成middle，这样可以使大图片在屏幕上居中显示。<br>
+				最后设置img宽度100%，在这里跟屏幕宽度一样。<br><br>
+			</div>
+			<div class="post-content-title-2 post-content-vmargin-2">2.下面，通过js实现左右滑动功能。</div>
+			<div class="post-content-body-default">
+				主要代码如上图，并附上注释如下：
+				<pre>
+var slider = {
+    //判断设备是否支持touch事件
+    touch:('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
+    //事件
+    events:{
+        container:$('#lImgContainer'),
+        //事件入口，分发
+        handleEvent:function(event){
+            var self = this;     //this指events对象
+            if(event.type == 'touchstart'){
+                self.start(event);
+            }else if(event.type == 'touchmove'){
+                self.move(event);
+            }else if(event.type == 'touchend'){
+                self.end(event);
+            }
+        },
+        //滑动开始
+        start:function(event){
+            var self = this;
+            var touch = event.originalEvent.touches[0];     //touches数组对象获得屏幕上所有的touch，取第一个touch
+            self.startPos = {x:touch.pageX,y:touch.pageY,time:+new Date};    //取第一个touch的坐标值
+            self.isScrolling = 0;   //这个参数判断是垂直滚动还是水平滚动
+            self.containerLeft = +self.container.css("left").substring(0,self.container.css("left").length-2);
+            self.container.bind('touchmove touchend',function(e){
+                self.handleEvent(e);
+            });
+        },
+        //移动
+        move:function(event){
+            //当屏幕有多个touch，就不执行move操作
+            if(event.originalEvent.touches.length > 1) return;
+            var self = this;
+            var touch = event.originalEvent.touches[0];
+            self.endPos = {x:touch.pageX - self.startPos.x,y:touch.pageY - self.startPos.y};
+            self.isScrolling = Math.abs(self.endPos.x) < Math.abs(self.endPos.y) ? 1:0;    //isScrolling为1时，表示纵向滑动，0为横向滑动
+            if(self.isScrolling === 0){
+                event.preventDefault();      //阻止触摸事件的默认行为，即阻止滚屏
+                self.container.css('left', (self.containerLeft + self.endPos.x) + 'px');
+            }
+        },
+        //滑动释放
+        end:function(event){
+            var self = this;
+            var duration = +new Date - self.startPos.time;    //滑动的持续时间
+            if(duration > 120){
+                if(self.isScrolling === 0){
+                    if(self.endPos.x > 50){ //左移
+                        if(self.containerLeft != 0){
+                            self.containerLeft += $(window).width();
+                        }
+                    }else if(self.endPos.x < -50){  //右移
+                        if(-self.containerLeft != (self.container.find("img").length-1)*$(window).width()){
+                            self.containerLeft -= $(window).width();
+                        }
+                    }
+                    self.container.css('left', self.containerLeft + 'px');
+                }
+            }else{
+                hidePic();
+            }
+            //解绑事件
+            this.container.unbind('touchmove touchend');
+        }
+    },
+    
+    //初始化
+    init:function(){
+        var self = this;     //this指slider对象
+        if(!!self.touch){
+            self.events.container.bind('touchstart',function(e){
+                self.events.handleEvent(e);
+            });
+        }  
+    }
+};
+				</pre>
+				该代码使用了jQuery框架（其实，大可以不用，我第一个版本并没有用，只是后来应项目之需才改成JQuery）,调用slider.init(),即可实现#lImgContainer绑定touch事件。事件触发后，将会进入slider.handleEvent函数中进行判断事件类型，并执行相应操作。<br><br>
 			</div>
 
-			<div class="post-content-title-2 post-content-vmargin-2">3.最关键的一步：设置父容器的font-size为0</div>
+			<div class="post-content-title-2 post-content-vmargin-2">效果图如下：</div>
 			<div class="post-content-body-default">
-				这一步尤为关键，若父容器的font-size不为0，则子容器之间的间距也不等于0.
-				<pre>
-.outerdiv{
-    font-size:0;
-}
-.innerdiv1,innerdiv2{
-    font-size:14px;
-}
-				</pre>
-				效果如下：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<img src="{{site.baseurl}}/img/2015-12-17/clear-distance.png">			
+				1.底层效果<br>
+				<img src="{{site.baseurl}}/img/2016-04-12/buttomLayer.png"><br><br>
+				2.大图片查看效果<br>
+				<img src="{{site.baseurl}}/img/2016-04-12/overLayer0.png">&nbsp;&nbsp;
+				<img src="{{site.baseurl}}/img/2016-04-12/overLayer1.png">&nbsp;&nbsp;
+				<img src="{{site.baseurl}}/img/2016-04-12/overLayer2.png"><br><br>
+				3.滑动过程效果<br>
+				<img src="{{site.baseurl}}/img/2016-04-12/slidering.png"><br><br>
+			</div>
+			<div class="post-content-title-2 post-content-vmargin-2">demo下载：</div>
+			<div class="post-content-body-default">
+				<a href="{{site.baseurl}}/demo/2016-04-12.zip">点击此处可下载demo实例</a>
+				<br><br><br>
 			</div>
 		</div>
 	</div>
-
 </div>
 
 
