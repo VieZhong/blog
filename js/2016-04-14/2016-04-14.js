@@ -68,7 +68,7 @@ Sokoban.prototype = {
         }
     },
     prepareImage : function(callback){
-        var imgSrcArray = ['{{site.baseurl}}/img/2016-04-14/1.png','{{site.baseurl}}/img/2016-04-14/2.png','{{site.baseurl}}/img/2016-04-14/3.png','{{site.baseurl}}/img/2016-04-14/4.png','{{site.baseurl}}/img/2016-04-14/5.png'];
+        var imgSrcArray = ['../../img/2016-04-14/1.png','../../img/2016-04-14/2.png','../../img/2016-04-14/3.png','../../img/2016-04-14/4.png','../../img/2016-04-14/5.png'];
         var that = this;
         for(var i=0,len=this.imgArray.length,loading=len-1;i<5;i++){
             this.imgArray[i].src = imgSrcArray[i];
