@@ -207,12 +207,5 @@ Sokoban.prototype = {
     }
 };
 
-var boxCanvas = document.getElementById("boxCanvas");
-boxCanvas.width = window.innerWidth  > 1366 ? 640 : window.innerWidth  < 991 ? window.innerWidth * 0.61 : window.innerWidth * 0.45 ;
-boxCanvas.height = boxCanvas.width/10*7;
-var sokoban = new Sokoban(boxCanvas.getContext('2d'),boxCanvas.width,boxCanvas.height);
+var boxCanvas = document.getElementById("boxCanvas");var sokoban = new Sokoban(boxCanvas.getContext('2d'),boxCanvas.width,boxCanvas.height);
 sokoban.init();
-
-window.onresize = function(){
-    boxCanvas.width = window.innerWidth  > 1366 ? 640 : window.innerWidth  < 991 ? window.innerWidth * 0.61 : window.innerWidth * 0.45 ;
-};
