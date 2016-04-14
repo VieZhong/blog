@@ -75,6 +75,7 @@ body{
 	background:rgb(219,248,200);
 	vertical-align:top;
 	display: inline-block;
+	min-width: 700px;
 	width: 64%;
 	text-align: left;
 	padding:20px;	
@@ -157,6 +158,7 @@ body{
 	vertical-align:top;
 	display: inline-block;
 	width: 24%;
+	max-width: 430px;
 	text-align: left;
 }
 
