@@ -107,7 +107,7 @@ var protectedScreen = function(context, cwidth, cheight) {
 }
 
 var screenCanvas = document.getElementById("screenCanvas");
-screenCanvas.width = window.innerWidth  > 1366 ? 640 : window.innerWidth  < 991 ? window.innerWidth * 0.61 : window.innerWidth * 0.45 ;
+screenCanvas.width = 620;
 screenCanvas.height = 480;
 
 var screenContext = screenCanvas.getContext("2d");
@@ -119,7 +119,3 @@ var interval = setInterval(function() {
 	pScreen.update();
 	pScreen.drawBalls()
 }, 30);
-
-window.onresize = function(){
-	screenCanvas.width = window.innerWidth  > 1366 ? 640 : window.innerWidth  < 991 ? window.innerWidth * 0.61 : window.innerWidth * 0.45 ;
-};
