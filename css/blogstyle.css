@@ -76,6 +76,7 @@ body{
 	vertical-align:top;
 	display: inline-block;
 	min-width: 700px;
+	min-width: 950px;
 	width: 64%;
 	text-align: left;
 	padding:20px;	
@@ -158,7 +159,7 @@ body{
 	vertical-align:top;
 	display: inline-block;
 	width: 24%;
-	max-width: 430px;
+	max-width: 400px;
 	text-align: left;
 }
 
