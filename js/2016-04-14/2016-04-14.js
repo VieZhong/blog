@@ -78,8 +78,7 @@ Sokoban.prototype = {
                     callback.call(that);
                     window.onkeydown = function(e){
                         e.preventDefault();
-                        console.log(e)
-                        //that.action(e.keyIdentifier.toLowerCase());
+                        that.action(e.keyCode);
                     };
                 }
             };
@@ -99,7 +98,7 @@ Sokoban.prototype = {
     action : function(direction){
         var nextLoc = {};
         switch(direction){
-            case 'up': 
+            case 38: 
                 nextLoc.type = this.cellArray[this.curLoc.y-1][this.curLoc.x];
                 nextLoc.x = this.curLoc.x;
                 nextLoc.y = this.curLoc.y-1;
@@ -113,7 +112,7 @@ Sokoban.prototype = {
                 }
                 this.checkResult();
                 break;
-            case 'down': 
+            case 40: 
                 nextLoc.type = this.cellArray[this.curLoc.y+1][this.curLoc.x];
                 nextLoc.x = this.curLoc.x;
                 nextLoc.y = this.curLoc.y+1;
@@ -127,7 +126,7 @@ Sokoban.prototype = {
                 }
                 this.checkResult();
                 break;
-            case 'left': 
+            case 37: 
                 nextLoc.type = this.cellArray[this.curLoc.y][this.curLoc.x-1];
                 nextLoc.x = this.curLoc.x-1;
                 nextLoc.y = this.curLoc.y;
@@ -141,7 +140,7 @@ Sokoban.prototype = {
                 }
                 this.checkResult();
                 break;
-            case 'right': 
+            case 39: 
                 nextLoc.type = this.cellArray[this.curLoc.y][this.curLoc.x+1];
                 nextLoc.x = this.curLoc.x+1;
                 nextLoc.y = this.curLoc.y;
