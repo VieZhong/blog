@@ -78,7 +78,8 @@ Sokoban.prototype = {
                     callback.call(that);
                     window.onkeydown = function(e){
                         e.preventDefault();
-                        that.action(e.keyIdentifier.toLowerCase());
+                        console.log(e)
+                        //that.action(e.keyIdentifier.toLowerCase());
                     };
                 }
             };
